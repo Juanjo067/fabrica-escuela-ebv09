@@ -1,0 +1,19 @@
+$kind: http-request
+name: http://localhost:8080/api/especialidades
+description: ""
+url: http://localhost:8080/api/especialidades
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"nombreEspecialidad\": \"Optometría\",\r
+
+    \  \"descripcion\": \"Consulta general de la vista\",\r
+
+    \  \"duracionMinutos\": 30,\r
+
+    \  \"idEspecialista\": 1\r
+
+    }"
+order: 1789183979525
