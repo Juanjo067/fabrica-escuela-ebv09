@@ -4,6 +4,7 @@ Backend del Sprint 1 del proyecto de citas médicas, desarrollado con **Spring B
 
 ## Historias de usuario implementadas
 
+- **HU-01 — Registro de usuario**: un usuario crea su cuenta para gestionar sus citas médicas.
 - **HU-06 — Registrar especialidad**: un especialista registra los tipos de consulta que ofrece.
 
 ## Tecnologías
@@ -61,6 +62,24 @@ Respuestas:
 ### Listar especialidades — `GET /api/especialidades`
 
 Devuelve todas las especialidades registradas.
+
+### Registrar usuario — `POST /api/usuarios`
+
+Body de ejemplo:
+```json
+{
+  "nombre": "Ana María",
+  "apellido": "Pérez",
+  "correo": "ana.perez@correo.com",
+  "contrasena": "claveSegura123",
+  "confirmarContrasena": "claveSegura123",
+  "telefono": "3001234567"
+}
+```
+
+Respuestas:
+- `201 Created` — cuenta creada correctamente, se devuelven los datos del usuario (sin la contraseña).
+- `400 Bad Request` — falta algún campo obligatorio, las contraseñas no coinciden, o el correo ya está registrado.
 
 ## Nota sobre datos de prueba
 

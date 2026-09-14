@@ -1,0 +1,23 @@
+$kind: http-request
+name: http://localhost:8080/api/usuarios
+description: ""
+url: http://localhost:8080/api/usuarios
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"nombre\": \"Ana María\",\r
+
+    \  \"apellido\": \"Pérez\",\r
+
+    \  \"correo\": \"ana.perez@correo.com\",\r
+
+    \  \"contrasena\": \"claveSegura123\",\r
+
+    \  \"confirmarContrasena\": \"claveSegura123\",\r
+
+    \  \"telefono\": \"3001234567\"\r
+
+    }"
+order: 1789183979526
