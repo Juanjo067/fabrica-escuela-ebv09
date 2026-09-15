@@ -80,7 +80,3 @@ Body de ejemplo:
 Respuestas:
 - `201 Created` — cuenta creada correctamente, se devuelven los datos del usuario (sin la contraseña).
 - `400 Bad Request` — falta algún campo obligatorio, las contraseñas no coinciden, o el correo ya está registrado.
-
-## Nota sobre datos de prueba
-
-Como HU-01 (registro de usuario) todavía no está implementada, para probar este endpoint es necesario crear manualmente un registro en las tablas `usuario` y `especialista` desde el Table Editor de Supabase, usando el mismo `id_usuario` en ambas tablas.
