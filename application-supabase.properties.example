@@ -1,0 +1,27 @@
+# Configuracion de conexion a Supabase
+# Copiar el contenido relevante a src/main/resources/application.properties
+# (ese archivo NO se sube a git, cada quien crea el suyo local).
+
+# ------------------------------------------------------------------
+# Donde encontrar estos datos en Supabase:
+# Project -> Project Settings -> Database -> Connection string -> URI
+# ------------------------------------------------------------------
+
+# OJO con el puerto - Supabase da dos opciones y una sola sirve aqui:
+#
+#   Puerto 5432 (conexion directa / "Session pooler")  -> SI sirve para Spring Boot.
+#   Puerto 6543 ("Transaction pooler" / PgBouncer)      -> NO sirve bien con Hibernate,
+#       porque Spring Boot mantiene conexiones abiertas (pool de HikariCP) y el modo
+#       transaction del pooler las cierra entre transacciones, lo que causa errores
+#       raros e intermitentes. Usar SIEMPRE el puerto 5432.
+
+spring.datasource.url=jdbc:postgresql://db.TU_PROYECTO.supabase.co:5432/postgres?sslmode=require
+spring.datasource.username=postgres
+spring.datasource.password=TU_CONTRASENA_DE_LA_BASE_DE_DATOS
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# Supabase exige SSL; el parametro sslmode=require en la URL de arriba ya lo cubre.
+# Si igual da error de SSL, agregar tambien esta linea:
+# spring.datasource.hikari.data-source-properties.sslmode=require
