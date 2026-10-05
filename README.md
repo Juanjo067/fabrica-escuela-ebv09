@@ -77,10 +77,26 @@ Body de ejemplo:
 }
 ```
 
+### Consultar perfil — `GET /api/usuarios/{id}`
+
+Devuelve los datos personales del usuario (sin la contraseña).
+
+Respuestas:
+- `200 OK` — datos del usuario.
+- `404 Not Found` — no existe un usuario con ese id.
+
+### Actualizar perfil — `PUT /api/usuarios/{id}`
+
+Body de ejemplo:
+```json
+{
+  "nombre": "Ana María",
+  "apellido": "Pérez",
+  "correo": "ana.perez@correo.com",
+  "telefono": "3001234567"
+}
+```
+
 Respuestas:
 - `201 Created` — cuenta creada correctamente, se devuelven los datos del usuario (sin la contraseña).
 - `400 Bad Request` — falta algún campo obligatorio, las contraseñas no coinciden, o el correo ya está registrado.
-
-## Nota sobre datos de prueba
-
-Como HU-01 (registro de usuario) todavía no está implementada, para probar este endpoint es necesario crear manualmente un registro en las tablas `usuario` y `especialista` desde el Table Editor de Supabase, usando el mismo `id_usuario` en ambas tablas.
