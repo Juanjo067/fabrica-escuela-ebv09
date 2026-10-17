@@ -1,0 +1,310 @@
+{
+  "info": {
+    "name": "Sprint 2 - HU-11",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Ajusta las variables de la colección: fecha (futura, de un día con horario de HU-09), idEspecialista, idUsuario, idCita (cita pendiente de ese usuario) e idBloqueo."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "fecha",
+      "value": "2026-10-19"
+    },
+    {
+      "key": "idEspecialista",
+      "value": "1"
+    },
+    {
+      "key": "idUsuario",
+      "value": "2"
+    },
+    {
+      "key": "idCita",
+      "value": "1"
+    },
+    {
+      "key": "idBloqueo",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Bloquear horario (201)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/especialistas/{{idEspecialista}}/bloqueos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "especialistas",
+            "{{idEspecialista}}",
+            "bloqueos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"09:00:00\",\n  \"horaFin\": \"10:00:00\",\n  \"motivo\": \"Reunión de equipo\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Bloquear de nuevo el mismo rango (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/especialistas/{{idEspecialista}}/bloqueos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "especialistas",
+            "{{idEspecialista}}",
+            "bloqueos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"09:00:00\",\n  \"horaFin\": \"09:30:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Hora inicio mayor que fin (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/especialistas/{{idEspecialista}}/bloqueos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "especialistas",
+            "{{idEspecialista}}",
+            "bloqueos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"10:00:00\",\n  \"horaFin\": \"09:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Falta la fecha (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/especialistas/{{idEspecialista}}/bloqueos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "especialistas",
+            "{{idEspecialista}}",
+            "bloqueos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"horaInicio\": \"09:00:00\",\n  \"horaFin\": \"10:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Especialista inexistente (404)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/especialistas/9999/bloqueos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "especialistas",
+            "9999",
+            "bloqueos"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha\": \"{{fecha}}\",\n  \"horaInicio\": \"09:00:00\",\n  \"horaFin\": \"10:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Listar bloqueos activos (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/especialistas/{{idEspecialista}}/bloqueos?fecha={{fecha}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "especialistas",
+            "{{idEspecialista}}",
+            "bloqueos"
+          ],
+          "query": [
+            {
+              "key": "fecha",
+              "value": "{{fecha}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Pedir cita en horario bloqueado - HU-12 (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": \"{{idUsuario}}\",\n  \"idEspecialista\": \"{{idEspecialista}}\",\n  \"idEspecialidad\": 1,\n  \"fechaCita\": \"{{fecha}}\",\n  \"horaCita\": \"09:30:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Desbloquear horario (200)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/bloqueos/{{idBloqueo}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "bloqueos",
+            "{{idBloqueo}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Desbloquear otra vez (400)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/bloqueos/{{idBloqueo}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "bloqueos",
+            "{{idBloqueo}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Bloqueo inexistente (404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/bloqueos/9999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "bloqueos",
+            "9999"
+          ]
+        }
+      }
+    }
+  ]
+}

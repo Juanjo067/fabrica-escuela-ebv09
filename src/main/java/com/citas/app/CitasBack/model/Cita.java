@@ -2,9 +2,10 @@ package com.citas.app.CitasBack.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "cita")
@@ -14,6 +15,8 @@ public class Cita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCita;
 
+    // El usuario que solicita la cita (el "cliente"). En este proyecto no hay
+    // una subclase Cliente separada, se usa directamente Usuario.
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     @JsonIgnoreProperties({"contrasenaHash", "correo", "telefono"})
@@ -29,15 +32,28 @@ public class Cita {
     @JsonIgnoreProperties("especialista")
     private Especialidad especialidad;
 
+    @Column(nullable = false)
     private LocalDate fechaCita;
+
+    @Column(nullable = false)
     private LocalTime horaCita;
 
-    @Enumerated(EnumType.STRING)
-    private EstadoCita estado = EstadoCita.PROGRAMADA;
+    @Column(nullable = false, length = 20)
+    private String estadoCita = EstadoCita.SOLICITADA;
 
+    @Column(nullable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    public enum EstadoCita { PROGRAMADA, CONFIRMADA, CANCELADA, REPROGRAMADA, COMPLETADA }
+    @Column(length = 200)
+    private String motivoCancelacion;
+
+    private LocalDateTime fechaCancelacion;
+
+    public String getMotivoCancelacion() { return motivoCancelacion; }
+    public void setMotivoCancelacion(String motivoCancelacion) { this.motivoCancelacion = motivoCancelacion; }
+
+    public LocalDateTime getFechaCancelacion() { return fechaCancelacion; }
+    public void setFechaCancelacion(LocalDateTime fechaCancelacion) { this.fechaCancelacion = fechaCancelacion; }
 
     public Long getIdCita() { return idCita; }
     public void setIdCita(Long idCita) { this.idCita = idCita; }
@@ -57,8 +73,8 @@ public class Cita {
     public LocalTime getHoraCita() { return horaCita; }
     public void setHoraCita(LocalTime horaCita) { this.horaCita = horaCita; }
 
-    public EstadoCita getEstado() { return estado; }
-    public void setEstado(EstadoCita estado) { this.estado = estado; }
+    public String getEstadoCita() { return estadoCita; }
+    public void setEstadoCita(String estadoCita) { this.estadoCita = estadoCita; }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
