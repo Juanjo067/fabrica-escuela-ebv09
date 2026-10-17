@@ -1,0 +1,233 @@
+{
+  "info": {
+    "name": "Sprint 2 - HU-15",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Ajusta las variables de la colección: fecha (futura, de un día con horario de HU-09), idEspecialista, idUsuario, idCita (cita pendiente de ese usuario) e idBloqueo."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "fecha",
+      "value": "2026-10-19"
+    },
+    {
+      "key": "idEspecialista",
+      "value": "1"
+    },
+    {
+      "key": "idUsuario",
+      "value": "2"
+    },
+    {
+      "key": "idCita",
+      "value": "1"
+    },
+    {
+      "key": "idBloqueo",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Reprogramar cita (200)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas/{{idCita}}/reprogramar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas",
+            "{{idCita}}",
+            "reprogramar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": \"{{idUsuario}}\",\n  \"nuevaFechaCita\": \"{{fecha}}\",\n  \"nuevaHoraCita\": \"10:00:00\",\n  \"motivo\": \"Cambio de agenda\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Fuera de la disponibilidad (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas/{{idCita}}/reprogramar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas",
+            "{{idCita}}",
+            "reprogramar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": \"{{idUsuario}}\",\n  \"nuevaFechaCita\": \"{{fecha}}\",\n  \"nuevaHoraCita\": \"23:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Horario ocupado o bloqueado (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas/{{idCita}}/reprogramar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas",
+            "{{idCita}}",
+            "reprogramar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": \"{{idUsuario}}\",\n  \"nuevaFechaCita\": \"{{fecha}}\",\n  \"nuevaHoraCita\": \"09:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Cita de otro usuario (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas/{{idCita}}/reprogramar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas",
+            "{{idCita}}",
+            "reprogramar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": 9999,\n  \"nuevaFechaCita\": \"{{fecha}}\",\n  \"nuevaHoraCita\": \"10:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Falta la nueva hora (400)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas/{{idCita}}/reprogramar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas",
+            "{{idCita}}",
+            "reprogramar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": \"{{idUsuario}}\",\n  \"nuevaFechaCita\": \"{{fecha}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Cita inexistente (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/citas/9999/reprogramar",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "citas",
+            "9999",
+            "reprogramar"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idUsuario\": \"{{idUsuario}}\",\n  \"nuevaFechaCita\": \"{{fecha}}\",\n  \"nuevaHoraCita\": \"10:00:00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
