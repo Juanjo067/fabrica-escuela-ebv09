@@ -20,4 +20,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     // HU-15: ¿el especialista ya tiene una cita activa en esa fecha y hora?
     Optional<Cita> findByEspecialista_IdUsuarioAndFechaCitaAndHoraCitaAndEstadoCitaNot(
             Long idEspecialista, LocalDate fechaCita, LocalTime horaCita, String estadoExcluido);
+
+        // HU-07 (Task 102): validar si la especialidad tiene citas en determinados estados (ej. SOLICITADA o CONFIRMADA)
+    boolean existsByEspecialidad_IdEspecialidadAndEstadoCitaIn(
+            Long idEspecialidad, List<String> estados);
 }

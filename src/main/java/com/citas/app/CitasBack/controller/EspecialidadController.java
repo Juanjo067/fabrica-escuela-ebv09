@@ -1,5 +1,6 @@
 package com.citas.app.CitasBack.controller;
 
+import com.citas.app.CitasBack.dto.EspecialidadEdicionRequest; // Importación añadida
 import com.citas.app.CitasBack.dto.EspecialidadRequest;
 import com.citas.app.CitasBack.model.Especialidad;
 import com.citas.app.CitasBack.service.EspecialidadService;
@@ -31,5 +32,20 @@ public class EspecialidadController {
     @GetMapping
     public ResponseEntity<List<Especialidad>> listar() {
         return ResponseEntity.ok(especialidadService.listarEspecialidades());
+    }
+
+    // --- NUEVO ENDPOINT HU-07 (Task 100) ---
+    @PutMapping("/{idEspecialidad}")
+    public ResponseEntity<?> actualizar(@PathVariable Long idEspecialidad, 
+                                        @Valid @RequestBody EspecialidadEdicionRequest request) {
+        try {
+            Especialidad actualizada = especialidadService.actualizarEspecialidad(idEspecialidad, request);
+            return ResponseEntity.ok(actualizada);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            // Retorna 400 BAD_REQUEST si intenta cambiar la duración con citas pendientes
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
