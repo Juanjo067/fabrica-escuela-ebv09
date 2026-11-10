@@ -6,6 +6,8 @@ Backend del Sprint 1 del proyecto de citas médicas, desarrollado con **Spring B
 
 - **HU-01 — Registro de usuario**: un usuario crea su cuenta para gestionar sus citas médicas.
 - **HU-06 — Registrar especialidad**: un especialista registra los tipos de consulta que ofrece.
+- **HU-05 — Recuperar contraseña**: un usuario que olvidó su clave pide un enlace por correo y define una nueva.
+- **HU-23 — Bloqueo por intentos fallidos**: la cuenta se bloquea temporalmente después de varios intentos de login con clave incorrecta.
 
 ## Tecnologías
 
@@ -330,6 +332,52 @@ Hace falta una cita con fecha al menos 24 horas en el futuro, insertada a mano e
 La tabla `reprogramacion_cita` se crea sola al arrancar la aplicación (`ddl-auto=update`).
 
 **Nota importante:** igual que en HU-14, el `idUsuario` viaja en el body mientras no exista autenticación con token.
+
+---
+
+## HU-05: Recuperar contraseña
+
+### Recuperar contraseña — `POST /api/auth/recuperar`
+
+Body de ejemplo:
+```json
+{
+  "correo": "ana.perez@correo.com"
+}
+```
+
+Respuestas:
+- `200 OK` — siempre devuelve el mismo mensaje genérico, exista o no el correo (no se revela si está registrado). Si existe, se envía un correo con un enlace que vence a los 30 minutos.
+- `400 Bad Request` — falta el correo o no tiene formato válido.
+
+**Nota:** el envío de correos usa un servicio gratuito (Mailtrap) que tiene un límite de envíos. No abusar de las peticiones a este endpoint durante las pruebas. En Mailtrap los correos no llegan al destinatario real, se ven en el inbox de la cuenta.
+
+### Restablecer contraseña — `POST /api/auth/restablecer`
+
+Body de ejemplo:
+```json
+{
+  "token": "919286ab-0fd5-4515-a759-16d530xxxxxx",
+  "contrasena": "nuevaClave123",
+  "confirmarContrasena": "nuevaClave123"
+}
+```
+
+Respuestas:
+- `200 OK` — contraseña actualizada, ya se puede iniciar sesión con la clave nueva. El token queda inutilizado (un solo uso).
+- `400 Bad Request` — falta algún campo, la contraseña tiene menos de 8 caracteres o no tiene letras y números, las contraseñas no coinciden, o el token no es válido, ya se usó o expiró.
+
+---
+
+## HU-23: Bloqueo por intentos fallidos
+
+### Iniciar sesión — `POST /api/auth/login`
+
+Después de 5 intentos fallidos la cuenta se bloquea por 15 minutos. Restablecer la contraseña (HU-05) también la desbloquea.
+
+Respuestas adicionales:
+- `400 Bad Request` — `Cuenta bloqueada por 15 minutos por demasiados intentos fallidos` (se llegó al límite de intentos).
+- `400 Bad Request` — `Cuenta bloqueada temporalmente. Intenta de nuevo en X minutos` (la cuenta ya estaba bloqueada).
 
 ---
 

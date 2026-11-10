@@ -36,6 +36,9 @@ public class RecuperacionService {
     @Value("${recuperacion.url-frontend:http://localhost:3000/restablecer}")
     private String urlFrontend;
 
+    @Value("${recuperacion.remitente:citas@ejemplo.com}")
+    private String remitente;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void solicitar(String correo) {
@@ -49,6 +52,7 @@ public class RecuperacionService {
             try {
                 SimpleMailMessage mail = new SimpleMailMessage();
                 mail.setTo(usuario.getCorreo());
+                mail.setFrom(remitente);
                 mail.setSubject("Recuperar contraseña");
                 mail.setText("Para restablecer tu contraseña entra a: " + urlFrontend + "?token=" + t.getToken()
                     + "\nEl enlace vence en " + minutosExpiracion + " minutos.");
