@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.citas.app.CitasBack.dto.EspecialistaResponse;
+import com.citas.app.CitasBack.dto.EspecialistaDetalleResponse;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class EspecialistaService {
@@ -49,5 +54,21 @@ public class EspecialistaService {
 
         // 4. Guardar en base de datos.
         return especialistaRepository.save(especialista);
+    }
+
+    // HU-20 (Task 186): Listar especialistas activos y mapearlos al DTO
+    public List<EspecialistaResponse> listarEspecialistasActivos() {
+        return especialistaRepository.findByActivoTrue()
+                .stream()
+                .map(EspecialistaResponse::new) // Mapea de Entidad a DTO seguro
+                .collect(Collectors.toList());
+    }
+
+    // HU-20 (Task 187): Consultar detalle de un especialista activo
+    public EspecialistaDetalleResponse obtenerDetalleEspecialista(Long idUsuario) {
+        Especialista especialista = especialistaRepository.findByIdUsuarioAndActivoTrue(idUsuario)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró el especialista o no está activo"));
+        
+        return new EspecialistaDetalleResponse(especialista);
     }
 }

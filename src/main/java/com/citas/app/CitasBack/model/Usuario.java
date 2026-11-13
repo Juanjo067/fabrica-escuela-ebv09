@@ -55,4 +55,11 @@ public class Usuario {
 
     public LocalDateTime getBloqueadoHasta() { return bloqueadoHasta; }
     public void setBloqueadoHasta(LocalDateTime bloqueadoHasta) { this.bloqueadoHasta = bloqueadoHasta; }
+
+    // (Task 185): Controla si el usuario/especialista está activo
+    @Column(nullable = false)
+    private Boolean activo = true;
+
+    public Boolean getActivo() { return activo; }
+    public void setActivo(Boolean activo) { this.activo = activo; }
 }
