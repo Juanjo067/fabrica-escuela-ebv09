@@ -11,6 +11,9 @@ import com.citas.app.CitasBack.repository.EspecialistaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.citas.app.CitasBack.dto.EspecialidadResponse;
+import com.citas.app.CitasBack.dto.EspecialidadDetalleResponse;
+import java.util.stream.Collectors;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,5 +80,21 @@ public class EspecialidadService {
         especialidad.setDuracionMinutos(request.getDuracionMinutos());
 
         return especialidadRepository.save(especialidad);
+    }
+
+    // HU-08 (Task 156): Listar especialidades activas y mapearlas al DTO
+    public List<EspecialidadResponse> listarEspecialidadesActivas() {
+        return especialidadRepository.findByActivoTrue()
+                .stream()
+                .map(EspecialidadResponse::new) // Convierte la Entidad al DTO seguro
+                .collect(Collectors.toList());
+    }
+
+    // HU-08 (Task 157): Consultar detalle de una especialidad activa
+    public EspecialidadDetalleResponse obtenerDetalleEspecialidad(Long idEspecialidad) {
+        Especialidad especialidad = especialidadRepository.findByIdEspecialidadAndActivoTrue(idEspecialidad)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró la especialidad o no está activa"));
+        
+        return new EspecialidadDetalleResponse(especialidad);
     }
 }

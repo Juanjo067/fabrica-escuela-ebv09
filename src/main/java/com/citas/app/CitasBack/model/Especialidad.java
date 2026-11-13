@@ -17,6 +17,10 @@ public class Especialidad {
 
     private Integer duracionMinutos;
 
+    // NUEVO CAMPO: Para criterios de especialidades "activas"
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     // A qué especialista pertenece esta especialidad (Escenario 1 del criterio)
     @ManyToOne
     @JoinColumn(name = "id_especialista", nullable = false)
@@ -36,4 +40,7 @@ public class Especialidad {
 
     public Especialista getEspecialista() { return especialista; }
     public void setEspecialista(Especialista especialista) { this.especialista = especialista; }
+
+    public Boolean getActivo() { return activo; }
+    public void setActivo(Boolean activo) { this.activo = activo; }
 }

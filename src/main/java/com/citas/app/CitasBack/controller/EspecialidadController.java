@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
+import com.citas.app.CitasBack.dto.EspecialidadResponse;
+import com.citas.app.CitasBack.dto.EspecialidadDetalleResponse;
 
 @RestController
 @RequestMapping("/api/especialidades")
@@ -46,6 +48,31 @@ public class EspecialidadController {
         } catch (IllegalArgumentException e) {
             // Retorna 400 BAD_REQUEST si intenta cambiar la duración con citas pendientes
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // HU-08 (Task 156): Endpoint para listar especialidades activas
+    @GetMapping("/activas")
+    public ResponseEntity<?> listarActivas() {
+        List<EspecialidadResponse> activas = especialidadService.listarEspecialidadesActivas();
+        
+        // Escenario 2: Informar que no hay especialidades disponibles
+        if (activas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No hay especialidades disponibles en este momento.");
+        }
+        
+        // Escenario 1: Mostrar la lista de especialidades activas
+        return ResponseEntity.ok(activas);
+    }
+
+    // HU-08 (Task 157): Endpoint para consultar detalle de especialidad
+    @GetMapping("/{idEspecialidad}/detalle")
+    public ResponseEntity<?> obtenerDetalle(@PathVariable Long idEspecialidad) {
+        try {
+            EspecialidadDetalleResponse detalle = especialidadService.obtenerDetalleEspecialidad(idEspecialidad);
+            return ResponseEntity.ok(detalle);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
