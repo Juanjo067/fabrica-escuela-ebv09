@@ -1,6 +1,7 @@
 package com.citas.app.CitasBack.service;
 
 import com.citas.app.CitasBack.dto.EspecialistaRequest;
+import com.citas.app.CitasBack.dto.EspecialistaUpdateRequest;
 import com.citas.app.CitasBack.model.Especialista;
 import com.citas.app.CitasBack.repository.EspecialistaRepository;
 import com.citas.app.CitasBack.repository.UsuarioRepository;
@@ -12,6 +13,7 @@ import com.citas.app.CitasBack.dto.EspecialistaResponse;
 import com.citas.app.CitasBack.dto.EspecialistaDetalleResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +42,7 @@ public class EspecialistaService {
 
         // 3. Crear y poblar la entidad Especialista
         Especialista especialista = new Especialista();
-        
+
         // --- Campos heredados de Usuario ---
         especialista.setNombre(request.getNombre());
         especialista.setApellido(request.getApellido());
@@ -48,7 +50,7 @@ public class EspecialistaService {
         especialista.setTelefono(request.getTelefono());
         // Encriptar la contraseña usando el mismo estándar del equipo
         especialista.setContrasenaHash(passwordEncoder.encode(request.getContrasena()));
-        
+
         // --- Campos propios de Especialista ---
         especialista.setRegistroMedico(request.getRegistroMedico());
 
@@ -68,7 +70,30 @@ public class EspecialistaService {
     public EspecialistaDetalleResponse obtenerDetalleEspecialista(Long idUsuario) {
         Especialista especialista = especialistaRepository.findByIdUsuarioAndActivoTrue(idUsuario)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró el especialista o no está activo"));
-        
+
         return new EspecialistaDetalleResponse(especialista);
+    }
+
+    // HU-21: editar los datos de un especialista (no cambia la contraseña).
+    @Transactional
+    public Especialista editarEspecialista(Long idUsuario, EspecialistaUpdateRequest request) {
+
+        Especialista especialista = especialistaRepository.findById(idUsuario)
+                .orElseThrow(() -> new NoSuchElementException("No existe un especialista con id " + idUsuario));
+
+        // El correo no puede pertenecer a otra cuenta (usuarios o especialistas).
+        usuarioRepository.findByCorreo(request.getCorreo()).ifPresent(otro -> {
+            if (!Objects.equals(otro.getIdUsuario(), idUsuario)) {
+                throw new IllegalArgumentException("Ya existe una cuenta registrada con ese correo");
+            }
+        });
+
+        especialista.setNombre(request.getNombre().trim());
+        especialista.setApellido(request.getApellido().trim());
+        especialista.setCorreo(request.getCorreo().trim());
+        especialista.setTelefono(request.getTelefono());
+        especialista.setRegistroMedico(request.getRegistroMedico().trim());
+
+        return especialistaRepository.save(especialista);
     }
 }
