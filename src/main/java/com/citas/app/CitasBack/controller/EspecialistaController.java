@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.citas.app.CitasBack.dto.EspecialistaRequest;
 import com.citas.app.CitasBack.dto.EspecialistaResponse;
+import com.citas.app.CitasBack.dto.EspecialistaUpdateRequest;
 import com.citas.app.CitasBack.model.Especialista;
 import com.citas.app.CitasBack.service.EspecialistaService;
 
@@ -33,10 +35,10 @@ public class EspecialistaController {
         try {
             // Llama a la lógica de negocio construida en el Task 96
             Especialista creado = especialistaService.registrarEspecialista(request);
-            
+
             // Envuelve la entidad en el EspecialistaResponse (Task 95) para no exponer contraseñas
             return ResponseEntity.status(HttpStatus.CREATED).body(new EspecialistaResponse(creado));
-            
+
         } catch (IllegalArgumentException e) {
             // Sigue el mismo patrón del equipo: regla de negocio inválida -> 400
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -47,12 +49,12 @@ public class EspecialistaController {
     @GetMapping("/activos")
     public ResponseEntity<?> listarActivos() {
         List<EspecialistaResponse> activos = especialistaService.listarEspecialistasActivos();
-        
+
         // Sin especialistas disponibles
         if (activos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No hay especialistas registrados o activos en este momento.");
         }
-        
+
         // Mostrar la lista de especialistas
         return ResponseEntity.ok(activos);
     }
@@ -65,6 +67,20 @@ public class EspecialistaController {
             return ResponseEntity.ok(detalle);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // HU-21: Endpoint para editar un especialista
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<?> editar(@PathVariable Long idUsuario,
+                                    @Valid @RequestBody EspecialistaUpdateRequest request) {
+        try {
+            Especialista actualizado = especialistaService.editarEspecialista(idUsuario, request);
+            return ResponseEntity.ok(new EspecialistaResponse(actualizado));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
